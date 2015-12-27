@@ -37,6 +37,10 @@ class Matrix {
 		 * Arithmetic Operators
 		 */
 		Matrix operator+(const Matrix<T> &M);
+		Matrix operator-(const Matrix<T> &M);
+		Matrix operator*(const Matrix<T> &M);
+
+		//utility
 		void print();
 		const std::vector<T> &getCol(int idx);
 		
@@ -44,4 +48,5 @@ class Matrix {
 	
 	private:
 		std::vector<std::vector<T> > values;
+
 };
