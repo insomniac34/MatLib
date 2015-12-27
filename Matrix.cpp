@@ -1,3 +1,10 @@
+/*
+ * 	Matrix class implementation
+ *
+ *	(C) 2015 Tyler Raborn
+ *	This software is distributed under the GNU General Public License, v3.0
+ */
+
 #include "Matrix.h"
 
 /*
@@ -48,7 +55,7 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T> &M) {
 template<class T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T> &M) {
 	std::vector<std::vector<T> > result;
-	for (auto i = 0; i < M.values.size(); i++) {
+	for (auto i = 0; i < this->values.size(); i++) {
 		std::vector<T> newVec;
 		for (auto j = 0; j < M.values[0].size(); j++) {
 			newVec.push_back(0);
@@ -58,14 +65,13 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T> &M) {
 
 	Matrix<T>& left = (*this);
 	const Matrix<T>& right = M; 
-	for (auto lrow = 0; lrow < M.values[0].size(); lrow++) {
-		for (auto rcol = 0; rcol < M.values.size(); rcol++) {
-			for (auto i : {0, 1, 2, 3}) {
-				result[i][rcol] += left.values[lrow][i] * right.values[i][rcol];
+	for (auto lrow = 0; lrow < left.values.size(); lrow++) {
+		for (auto rcol = 0; rcol < right.values[0].size(); rcol++) {
+			for (auto i = 0; i < left.values[0].size(); i++) {
+				result[lrow][rcol] += left.values[lrow][i] * right.values[i][rcol];
 			}
 		}
 	}
-
 	return Matrix<T>(result);
 }
 
@@ -74,9 +80,9 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T> &M) {
  */
 template<class T>
 Matrix<T>::Matrix() {
-	for (auto i : {0.0, 1.0, 2.0, 3.0}) {
+	for (auto i : {0, 1, 2, 3}) {
 		std::vector<T> newVec;
-		for (auto j : {0.0, 1.0, 2.0, 3.0}) {
+		for (auto j : {0, 1, 2, 3}) {
 			newVec.push_back(0);
 		}
 		this->values.push_back(newVec);
@@ -136,27 +142,23 @@ void Matrix<T>::print() {
  * UTILITY
  */
 template<class T>
+std::vector<std::vector<T> > &Matrix<T>::getValues() {
+	return this->values;
+}
+
+template<class T>
 const std::vector<T> &Matrix<T>::getCol(int idx) {
 	return this->values[idx];
 }
 
 int main(void) {
-
 	std::vector<std::vector<float> > mat = 
 	{
-		{2.4, 4.5, 0.0, 2.3}, 
-		{1.0, 3.2, 3.5, 9.0}, 
-		{4.3, 2.3, 4.1, 4.5}, 
-		{4.8, 1.6, 6.2, 2.2}
+		{-1.0, 0.0, 0.0, 0.0}, 
+		{0.0, 1.0, 0.0, 0.0}, 
+		{0.0, 0.0, -1.0, 0.0}, 
+		{0.0, -1.0, -1.0, 1.0}
 	};
-	// for (int f : {0, 1, 2, 3}) {
-	// 	std::vector<float> col;
-	// 	col.push_back(3.2);
-	// 	col.push_back(3.1);
-	// 	col.push_back(3.0);
-	// 	col.push_back(2.9);
-	// 	mat.push_back(col);
-	// }
 
 	Matrix<float> M1(IDENTITY_4D, 4);
 	Matrix<float> M2(IDENTITY_4D, 4);
@@ -171,13 +173,55 @@ int main(void) {
 	M2.print();
 
 	Matrix<float> M6({
-		{2.4, 4.5, 0.0, 2.3}, 
-		{1.0, 3.2, 3.5, 9.0}, 
-		{4.3, 2.3, 4.1, 4.5}, 
-		{4.8, 1.6, 6.2, 2.2}
+		{-1.0, 0.0,  0.0, 0.0}, 
+		{ 0.0, 1.0,  0.0, 0.0}, 
+		{ 0.0, 0.0, -1.0, 0.0}, 
+		{ 0.0, 0.0,  0.0, 1.0}
+	});
+
+	Matrix<float> M7({
+		{1.0, 0.0, 0.0, 0.0}, 
+		{0.0, 1.0, 0.0, 0.0}, 
+		{0.0, 0.0, 1.0, 0.0}, 
+		{0.0, -1.0, -1.0, 1.0}
 	});
 	Matrix<float> M5 = M1 * M6;
+	std::cout << "M5:" << std::endl;
 	M5.print();
+
+	Matrix<float> M8 = M6 * M7;
+	std::cout << "M8:" << std::endl;
+	M8.print();
+
+	for (int i = 0; i < M8.getValues().size(); i++) {
+		for (int j = 0; j < M8.getValues()[i].size(); j++) {
+			assert(M8.getValues()[i][j] == mat[i][j]);
+		}
+	}
+
+	Matrix<float> V0 = Matrix<float>({
+		{9}, 
+		{8}, 
+		{7}
+	});
+
+	Matrix<float> M9 = Matrix<float>({
+		{ 1, 2, 3},
+		{ 4, 5, 6}
+	});
+
+	Matrix<float> matVecResult = M9 * V0;
+	matVecResult.print();
+	
+	std::vector<std::vector<float> > matVecResultExpectedValue = {
+		{46.0}, 
+		{118.0}
+	};
+	for (int i = 0; i < matVecResult.getValues().size(); i++) {
+		for (int j = 0; j < matVecResult.getValues()[i].size(); j++) {
+			assert(matVecResult.getValues()[i][j] == matVecResultExpectedValue[i][j]);
+		}
+	}
 
 	std::cout << "exiting" << std::endl;
 	return 0;

@@ -8,9 +8,13 @@
 //C Standard Library
 #include <cstdio>
 #include <cstring>
+#include <cassert>
 
 //Matrix constants
 #include "constants.h"
+
+//debugging mode
+//#define NDEBUG
 
 template<class T>
 class Matrix {
@@ -43,10 +47,12 @@ class Matrix {
 		//utility
 		void print();
 		const std::vector<T> &getCol(int idx);
-		
+		std::vector<std::vector<T> >& getValues();
 		
 	
 	private:
 		std::vector<std::vector<T> > values;
 
 };
+
+const Matrix<float> IDENTITY(IDENTITY_4D, 4);
