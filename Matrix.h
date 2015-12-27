@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include <algorithm>
 
 //C Standard Library
 #include <cstdio>
@@ -28,14 +29,14 @@ class Matrix {
 		/*
 		 * Templated Constructors
 		 */
-		Matrix(std::vector<std::vector<T> > &nums);
+		Matrix(std::vector<std::vector<T> > nums);
 		Matrix(T** nums, int dim);
 		Matrix(const T nums[][4], int dim);
 
 		/*
 		 * Arithmetic Operators
 		 */
-		Matrix& operator+(const Matrix<T> &M);
+		Matrix operator+(const Matrix<T> &M);
 		void print();
 		const std::vector<T> &getCol(int idx);
 		

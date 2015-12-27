@@ -1,33 +1,24 @@
 #include "Matrix.h"
 
 template<class T>
-Matrix<T>& Matrix<T>::operator+(const Matrix<T> &M) {
-	// std::vector<std::vector<T> > result;
-	// for (auto i = 0; i < M.values.size(); i++) {
-	// 	std::vector<T> newVec;
-	// 	for (auto j = 0; j < M.values[0].size(); j++) {
-	// 		newVec.push_back(0);
-	// 	}
-	// 	result.push_back(newVec);
-	// }
+Matrix<T> Matrix<T>::operator+(const Matrix<T> &M) {
+	std::vector<std::vector<T> > result;
+	for (auto i = 0; i < M.values.size(); i++) {
+		std::vector<T> newVec;
+		for (auto j = 0; j < M.values[0].size(); j++) {
+			newVec.push_back(0);
+		}
+		result.push_back(newVec);
+	}
 
 	for (typename std::vector<std::vector<T> >::iterator iter = this->values.begin(); iter != this->values.end(); iter++) {
-			
-		std::cout << iter->size() << std::endl;
-
 		for (typename std::vector<T>::iterator _iter = (*iter).begin(); _iter != (*iter).end(); _iter++) {
 			auto outerDistance = std::distance<typename std::vector<std::vector<T> >::const_iterator>(iter, this->values.end()) - 1;
 			auto innerDistance = std::distance(_iter, (*iter).end()) - 1;
-			//std::cout << "outerDistance: " << outerDistance << std::endl;
-			//std::cout << "innerDistance: " << innerDistance << std::endl;
-			//std::cout << M.values[outerDistance][innerDistance] << innerDistance << std::endl;
-			//std::cout << M.values[0][1] << std::endl;
-			(*_iter) += M.values[outerDistance][innerDistance];
-			//result[outerDistance][innerDistance] = *_iter + M.values[outerDistance][innerDistance];
+			result[outerDistance][innerDistance] = (*_iter) + M.values[outerDistance][innerDistance];
 		}
 	}
-	//return Matrix<T>(result);
-	return (*this);
+	return Matrix<T>(result);
 }
 
 /*
@@ -38,15 +29,15 @@ Matrix<T>::Matrix() {
 	for (auto i : {0.0, 1.0, 2.0, 3.0}) {
 		std::vector<T> newVec;
 		for (auto j : {0.0, 1.0, 2.0, 3.0}) {
-			newVec.push_back(j);
+			newVec.push_back(0);
 		}
 		this->values.push_back(newVec);
 	}
 }
 
 template<class T>
-Matrix<T>::Matrix(std::vector<std::vector<T> > &nums) {
-	memcpy((void*)(&this->values), (void*)&nums, sizeof(std::vector<std::vector<T> >));
+Matrix<T>::Matrix(std::vector<std::vector<T> > nums) {
+	this->values = nums;
 }
 
 template<class T> 
@@ -115,7 +106,6 @@ int main(void) {
 
 	Matrix<float> M1(IDENTITY_4D, 4);
 	Matrix<float> M2(IDENTITY_4D, 4);
-	//M2.print();
 
 	Matrix<float> M3 = M1 + M2;
 	M3.print();
@@ -123,13 +113,6 @@ int main(void) {
 	M1.print();
 	M2.print();
 
-	//Matrix<float> M2;
-	//memcpy((void*)&M2, (void*)M, sizeof(Matrix<float>));
-	//M->print();
-	//M2.print();
-
-
-
-	//delete M;
+	std::cout << "exiting" << std::endl;
 	return 0;
 }
