@@ -10,9 +10,6 @@
 #include <cstring>
 #include <cassert>
 
-//Matrix constants
-#include "constants.h"
-
 //debugging mode
 //#define NDEBUG
 
@@ -48,11 +45,26 @@ class Matrix {
 		void print();
 		const std::vector<T> &getCol(int idx);
 		std::vector<std::vector<T> >& getValues();
-		
+		const std::string &getHashId();
+		const char *getHashIdAsCString();
 	
-	private:
+	protected:
 		std::vector<std::vector<T> > values;
+		std::string hashId;
+};
 
+const float IDENTITY_4D[][4] = {
+	{1.0, 0.0, 0.0, 0.0},
+	{0.0, 1.0, 0.0, 0.0},
+	{0.0, 0.0, 1.0, 0.0},
+	{0.0, 0.0, 0.0, 1.0}
+};
+
+const float ZERO_4D[][4] = {
+	{0.0, 0.0, 0.0, 0.0},
+	{0.0, 0.0, 0.0, 0.0},
+	{0.0, 0.0, 0.0, 0.0},
+	{0.0, 0.0, 0.0, 0.0}
 };
 
 const Matrix<float> IDENTITY(IDENTITY_4D, 4);
